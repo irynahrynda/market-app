@@ -1,4 +1,4 @@
-package com.example.market_app;
+package com.example.marketapp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
