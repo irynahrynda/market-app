@@ -4,7 +4,7 @@ This application is implemented as a market service.
 - --
 
 ### If you want to run this project on your computer, you need:
-1. Fork and clone this project:
+1. Clone this project:
 2. Install Lombok plugin (or replace all @Data annotations with getters, setters and toString)
 3. Run 'MarketAppApplication' class
 4. Use Postman for sending your requests during testing this application
