@@ -1,4 +1,4 @@
-package com.example.market_app;
+package com.example.marketapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
