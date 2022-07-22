@@ -10,6 +10,7 @@ import com.example.marketapp.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,8 +35,9 @@ public class ProductController {
     }
 
     @PostMapping
-    @ApiOperation(value = "Create a new product")
-    public ProductResponseDto createProduct(@RequestBody ProductRequestDto productRequestDto) {
+    @ApiOperation(value = "Create new product")
+    public ProductResponseDto createProduct(@Valid
+                                                @RequestBody ProductRequestDto productRequestDto) {
         return productMapper.mapToDto(productService.createProduct(
                 productMapper.mapToModel(productRequestDto)));
     }
@@ -58,7 +60,8 @@ public class ProductController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Update product by id")
     public ProductResponseDto updateProduct(@PathVariable Long id,
-                                            @RequestBody ProductRequestDto productRequestDto) {
+                                            @Valid @RequestBody ProductRequestDto
+                                                    productRequestDto) {
         Product product = productMapper.mapToModel(productRequestDto);
         product.setId(id);
         return productMapper.mapToDto(productService.createProduct(product));
@@ -72,6 +75,7 @@ public class ProductController {
     }
 
     @GetMapping("/users/{id}")
+    @ApiOperation(value = "Get all products by id")
     public List<ProductResponseDto> getAllProductsByUserId(@PathVariable Long id) {
         User userById = userService.getUserById(id);
         List<ProductResponseDto> products = userById.getProducts().stream()

@@ -23,7 +23,7 @@ public class UserMapper {
         userResponseDto.setFirstName(user.getFirstName());
         userResponseDto.setLastName(user.getLastName());
         userResponseDto.setAmountOfMoney(user.getAmountOfMoney());
-        userResponseDto.setTicketIds(user.getProducts().stream()
+        userResponseDto.setProductIds(user.getProducts().stream()
                 .map(Product::getId)
                 .collect(Collectors.toList()));
         return userResponseDto;

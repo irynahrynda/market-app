@@ -10,5 +10,5 @@ public class UserResponseDto {
     private String firstName;
     private String lastName;
     private BigDecimal amountOfMoney;
-    private List<Long> ticketIds;
+    private List<Long> productIds;
 }

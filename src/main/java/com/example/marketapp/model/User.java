@@ -69,4 +69,15 @@ public class User {
     public void setProducts(List<Product> products) {
         this.products = products;
     }
+
+    @Override
+    public String toString() {
+        return "User{"
+                + "id=" + id
+                + ", firstName='" + firstName + '\''
+                + ", lastName='" + lastName + '\''
+                + ", amountOfMoney=" + amountOfMoney
+                + ", products=" + products
+                + '}';
+    }
 }

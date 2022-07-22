@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
         User updatedUser = new User();
         Product product = productService.getProductById(productId);
 
-        if (product.getPrice().compareTo(user.getAmountOfMoney()) < 0) {
+        if (product.getPrice().compareTo(user.getAmountOfMoney()) > 0) {
             throw new RuntimeException("Insufficient funds on the account");
         } else {
             user.setAmountOfMoney(user.getAmountOfMoney().subtract(product.getPrice()));

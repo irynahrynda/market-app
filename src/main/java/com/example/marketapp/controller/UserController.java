@@ -7,8 +7,10 @@ import com.example.marketapp.mapper.UserMapper;
 import com.example.marketapp.model.User;
 import com.example.marketapp.service.ProductService;
 import com.example.marketapp.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,16 +38,19 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto) {
+    @ApiOperation(value = "Create new user")
+    public UserResponseDto createUser(@Valid @RequestBody UserRequestDto userRequestDto) {
         return userMapper.mapToDto(userService.createUser(userMapper.mapToModel(userRequestDto)));
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(value = "Get user by id")
     public UserResponseDto getUserById(@PathVariable Long id) {
         return userMapper.mapToDto(userService.getUserById(id));
     }
 
     @GetMapping
+    @ApiOperation(value = "Get all users")
     public List<UserResponseDto> getAllUsers() {
         return userService.getAllUsers()
                 .stream()
@@ -54,26 +59,30 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value = "Update user by id")
     public UserResponseDto updateUserById(@PathVariable Long id,
-                                          @RequestBody UserRequestDto userRequestDto) {
+                                          @Valid @RequestBody UserRequestDto userRequestDto) {
         User user = userMapper.mapToModel(userRequestDto);
         user.setId(id);
         return userMapper.mapToDto(userService.createUser(user));
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Delete user by id")
     public String deleteUserById(@PathVariable Long id) {
         userService.deleteUserById(id);
         return "User by id " + id + " was deleted";
     }
 
     @PutMapping("/{id}/buy")
+    @ApiOperation(value = "Update user after purchase product")
     public String buyProduct(@PathVariable Long id, @RequestParam Long productId) {
         userMapper.mapToDto(userService.buyProduct(id, productId));
         return "Successful purchase!";
     }
 
     @GetMapping("/products/{id}")
+    @ApiOperation(value = "Get all users by product id")
     public List<UserResponseDto> getAllUsersByProductId(@PathVariable Long id) {
         List<UserResponseDto> users = userService.getAllUsersByProductId(id).stream()
                 .map(e -> userMapper.mapToDto(e))
