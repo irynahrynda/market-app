@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new RuntimeException("Can't get product by id: " + productId));
         if (product.getPrice().compareTo(user.getAmountOfMoney()) > 0) {
-            throw new RuntimeException("Insufficient funds for purchase");
+            throw new RuntimeException("Insufficient funds to buy products");
         } else {
             user.setAmountOfMoney(user.getAmountOfMoney().subtract(product.getPrice()));
             Set<Product> products = user.getProducts();
