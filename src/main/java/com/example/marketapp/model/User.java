@@ -1,14 +1,12 @@
 package com.example.marketapp.model;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -25,10 +23,7 @@ public class User {
     @Column(name = "amount_of_money")
     private BigDecimal amountOfMoney;
     @ManyToMany
-    @JoinTable(name = "users_products",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private List<Product> products;
+    private Set<Product> products;
 
     public Long getId() {
         return id;
@@ -62,11 +57,11 @@ public class User {
         this.amountOfMoney = amountOfMoney;
     }
 
-    public List<Product> getProducts() {
+    public Set<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
     }
 
