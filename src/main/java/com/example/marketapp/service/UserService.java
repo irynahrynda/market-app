@@ -1,18 +1,21 @@
 package com.example.marketapp.service;
 
-import com.example.marketapp.model.User;
+import com.example.marketapp.dto.request.UserRequestDto;
+import com.example.marketapp.dto.response.UserResponseDto;
 import java.util.List;
 
 public interface UserService {
-    User createUser(User user);
+    UserResponseDto createUser(UserRequestDto userRequestDto);
 
-    User getUserById(Long id);
+    UserResponseDto getUserById(Long id);
 
-    List<User> getAllUsers();
+    List<UserResponseDto> getAllUsers();
+
+    UserResponseDto updateUserById(Long id, UserRequestDto userRequestDto);
 
     void deleteUserById(Long id);
 
-    User buyProduct(Long userId, Long productId);
+    UserResponseDto buyProduct(Long userId, Long productId);
 
-    List<User> getAllUsersByProductId(Long id);
+    List<UserResponseDto> getAllUsersByProductId(Long id);
 }

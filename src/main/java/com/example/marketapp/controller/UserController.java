@@ -2,14 +2,9 @@ package com.example.marketapp.controller;
 
 import com.example.marketapp.dto.request.UserRequestDto;
 import com.example.marketapp.dto.response.UserResponseDto;
-import com.example.marketapp.mapper.ProductMapper;
-import com.example.marketapp.mapper.UserMapper;
-import com.example.marketapp.model.User;
-import com.example.marketapp.service.ProductService;
 import com.example.marketapp.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,46 +20,34 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-    private final ProductService productService;
-    private final UserMapper userMapper;
-    private final ProductMapper productMapper;
 
-    public UserController(UserService userService, ProductService productService,
-                          UserMapper userMapper, ProductMapper productMapper) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.productService = productService;
-        this.userMapper = userMapper;
-        this.productMapper = productMapper;
     }
 
     @PostMapping
     @ApiOperation(value = "Create new user")
     public UserResponseDto createUser(@Valid @RequestBody UserRequestDto userRequestDto) {
-        return userMapper.mapToDto(userService.createUser(userMapper.mapToModel(userRequestDto)));
+        return userService.createUser(userRequestDto);
     }
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get user by id")
     public UserResponseDto getUserById(@PathVariable Long id) {
-        return userMapper.mapToDto(userService.getUserById(id));
+        return userService.getUserById(id);
     }
 
     @GetMapping
     @ApiOperation(value = "Get all users")
     public List<UserResponseDto> getAllUsers() {
-        return userService.getAllUsers()
-                .stream()
-                .map(userMapper::mapToDto)
-                .collect(Collectors.toList());
+        return userService.getAllUsers();
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update user by id")
     public UserResponseDto updateUserById(@PathVariable Long id,
                                           @Valid @RequestBody UserRequestDto userRequestDto) {
-        User user = userMapper.mapToModel(userRequestDto);
-        user.setId(id);
-        return userMapper.mapToDto(userService.createUser(user));
+        return userService.updateUserById(id, userRequestDto);
     }
 
     @DeleteMapping("/{id}")
@@ -75,18 +58,15 @@ public class UserController {
     }
 
     @PutMapping("/{id}/buy")
-    @ApiOperation(value = "Update user after purchase product")
+    @ApiOperation(value = "Update user after buying a product")
     public String buyProduct(@PathVariable Long id, @RequestParam Long productId) {
-        userMapper.mapToDto(userService.buyProduct(id, productId));
+        userService.buyProduct(id, productId);
         return "Successful purchase!";
     }
 
     @GetMapping("/products/{id}")
     @ApiOperation(value = "Get all users by product id")
     public List<UserResponseDto> getAllUsersByProductId(@PathVariable Long id) {
-        List<UserResponseDto> users = userService.getAllUsersByProductId(id).stream()
-                .map(e -> userMapper.mapToDto(e))
-                .collect(Collectors.toList());
-        return users;
+        return userService.getAllUsersByProductId(id);
     }
 }

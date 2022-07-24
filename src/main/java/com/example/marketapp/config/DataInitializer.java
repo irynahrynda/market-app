@@ -2,20 +2,20 @@ package com.example.marketapp.config;
 
 import com.example.marketapp.model.Product;
 import com.example.marketapp.model.User;
-import com.example.marketapp.service.ProductService;
-import com.example.marketapp.service.UserService;
+import com.example.marketapp.repository.ProductRepository;
+import com.example.marketapp.repository.UserRepository;
 import java.math.BigDecimal;
 import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataInitializer {
-    private final ProductService productService;
-    private final UserService userService;
+    private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
-    public DataInitializer(ProductService productService, UserService userService) {
-        this.productService = productService;
-        this.userService = userService;
+    public DataInitializer(ProductRepository productRepository, UserRepository userRepository) {
+        this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
     @PostConstruct
@@ -23,34 +23,34 @@ public class DataInitializer {
         Product apple = new Product();
         apple.setName("Apple");
         apple.setPrice(BigDecimal.valueOf(22));
-        productService.createProduct(apple);
+        productRepository.save(apple);
 
         Product banana = new Product();
         banana.setName("Banana");
         banana.setPrice(BigDecimal.valueOf(46));
-        productService.createProduct(banana);
+        productRepository.save(banana);
 
         Product peach = new Product();
         peach.setName("Peach");
         peach.setPrice(BigDecimal.valueOf(234));
-        productService.createProduct(peach);
+        productRepository.save(peach);
 
         User userBob = new User();
         userBob.setFirstName("Bob");
         userBob.setLastName("Jonson");
         userBob.setAmountOfMoney(BigDecimal.valueOf(232));
-        userService.createUser(userBob);
+        userRepository.save(userBob);
 
         User userAlice = new User();
         userAlice.setFirstName("Alice");
         userAlice.setLastName("Robson");
         userAlice.setAmountOfMoney(BigDecimal.valueOf(345));
-        userService.createUser(userAlice);
+        userRepository.save(userAlice);
 
         User userJohn = new User();
         userJohn.setFirstName("John");
         userJohn.setLastName("Pitt");
         userJohn.setAmountOfMoney(BigDecimal.valueOf(543));
-        userService.createUser(userJohn);
+        userRepository.save(userJohn);
     }
 }
