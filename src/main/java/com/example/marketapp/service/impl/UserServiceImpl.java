@@ -49,9 +49,15 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto updateUserById(Long id, UserRequestDto userRequestDto) {
         User userToUpdate = userRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Can't get user by id: " + id));
-        userToUpdate.setFirstName(userRequestDto.getFirstName());
-        userToUpdate.setLastName(userRequestDto.getLastName());
-        userToUpdate.setAmountOfMoney(userRequestDto.getAmountOfMoney());
+        if (userRequestDto.getFirstName() != null) {
+            userToUpdate.setFirstName(userRequestDto.getFirstName());
+        }
+        if (userRequestDto.getLastName() != null) {
+            userToUpdate.setLastName(userRequestDto.getLastName());
+        }
+        if (userRequestDto.getAmountOfMoney() != null) {
+            userToUpdate.setAmountOfMoney(userRequestDto.getAmountOfMoney());
+        }
         return userMapper.mapToDto(userRepository.save(userToUpdate));
     }
 
@@ -62,10 +68,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto buyProduct(Long userId, Long productId) {
-        User user = userRepository.getById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new RuntimeException("Can't get user by id " + userId));
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new RuntimeException("Can't get product by id: " + productId));
-        if (product.getPrice().compareTo(user.getAmountOfMoney()) > 0) {
+        if (user.getAmountOfMoney().compareTo(product.getPrice()) < 0) {
             throw new RuntimeException("Insufficient funds to buy products");
         } else {
             user.setAmountOfMoney(user.getAmountOfMoney().subtract(product.getPrice()));
@@ -78,8 +85,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponseDto> getAllUsersByProductId(Long id) {
-        List<UserResponseDto> users = userRepository.findAll().stream()
-                .filter(e -> e.getProducts().contains(productRepository.getById(id)))
+        List<UserResponseDto> users = userRepository.getAllUsersByProductId(id).stream()
                 .map(userMapper::mapToDto)
                 .collect(Collectors.toList());
         return users;

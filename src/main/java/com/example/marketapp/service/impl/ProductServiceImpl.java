@@ -9,8 +9,10 @@ import com.example.marketapp.repository.ProductRepository;
 import com.example.marketapp.repository.UserRepository;
 import com.example.marketapp.service.ProductService;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -50,20 +52,35 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDto updateProductById(Long id, ProductRequestDto productRequestDto) {
         Product productToUpdate = productRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Can't get product by id: " + id));
-        productToUpdate.setName(productRequestDto.getName());
-        productToUpdate.setPrice(productRequestDto.getPrice());
+        if (productRequestDto.getName() != null) {
+            productToUpdate.setName(productRequestDto.getName());
+        }
+        if (productRequestDto.getPrice() != null) {
+            productToUpdate.setPrice(productRequestDto.getPrice());
+        }
         return productMapper.mapToDto(productRepository.save(productToUpdate));
     }
 
+    @Transactional
     @Override
     public void deleteProductById(Long id) {
+        Product deleteProduct = productRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Can't get product by id: " + id));
+        List<User> usersByProductId = userRepository.getAllUsersByProductId(id);
+        for (int i = 0; i < usersByProductId.size(); i++) {
+            Set<Product> products = usersByProductId.get(i).getProducts();
+            products.remove(deleteProduct);
+            usersByProductId.get(i).setProducts(products);
+            User userToUpdate = userRepository.save(usersByProductId.get(i));
+            usersByProductId.set(i, userToUpdate);
+        }
         productRepository.deleteById(id);
+        productMapper.mapToDto(deleteProduct);
     }
 
     @Override
     public List<ProductResponseDto> getAllProductsByUserId(Long id) {
-        User user = userRepository.getById(id);
-        List<ProductResponseDto> products = user.getProducts().stream()
+        List<ProductResponseDto> products = productRepository.getAllProductsByUserId(id).stream()
                 .map(productMapper::mapToDto)
                 .collect(Collectors.toList());
         return products;
